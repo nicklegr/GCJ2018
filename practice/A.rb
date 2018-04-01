@@ -105,9 +105,9 @@ cases = readline().to_i
       success = true
       break
     when "TOO_SMALL"
-      low = guess
+      low = guess + 1
     when "TOO_BIG"
-      hi = guess
+      hi = guess - 1
     when "WRONG_ANSWER"
       exit 1
     end
