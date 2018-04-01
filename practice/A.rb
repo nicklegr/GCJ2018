@@ -77,8 +77,6 @@ class Integer
 end
 
 # main
-STDOUT.sync = true
-
 t_start = Time.now
 
 cases = readline().to_i
@@ -97,6 +95,7 @@ cases = readline().to_i
   n.times do
     # answer
     puts guess
+    STDOUT.flush
 
     # response
     res = rs
