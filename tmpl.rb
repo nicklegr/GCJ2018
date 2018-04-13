@@ -2,18 +2,16 @@ require 'pp'
 
 def ppd(*arg)
   if $DEBUG
-    pp(*arg)
+    arg.each do |e|
+      PP.pp(e, STDERR)
+    end
   end
 end
 
 def putsd(*arg)
   if $DEBUG
-    puts(*arg)
+    STDERR.puts(*arg)
   end
-end
-
-def parr(arr)
-  puts arr.join(" ")
 end
 
 def parrd(arr)
