@@ -52,6 +52,11 @@ def rws(count)
   words
 end
 
+def puts_sync(str)
+  puts str
+  STDOUT.flush
+end
+
 class Integer
   def popcount32
     bits = self
