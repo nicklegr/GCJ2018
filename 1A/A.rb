@@ -79,56 +79,81 @@ class Integer
   end
 end
 
+def solve()
+  r, c, h, v = ris
+
+  grid = rws(r)
+
+  total = 0
+  for y in 0..r-1
+    for x in 0..c-1
+      total += 1 if grid[y][x] == "@"
+    end
+  end
+
+  return true if total == 0
+  return false if total % (h+1) != 0
+  return false if total / ((h+1) * (v+1)) != 0
+
+  p_must = total / ((h+1) * (v+1))
+
+  h_must = total / (h+1)
+
+  h_cuts = []
+  sum = 0
+
+  for y in 0..r-1
+    for x in 0..c-1
+      sum += 1 if grid[y][x] == "@"
+    end
+    if sum == h_must
+      h_cuts << x
+      sum = 0
+    end
+  end
+
+  return false if h_cuts.size != h
+  return false if sum != h_must
+
+  raise if h_cuts.uniq.size != h
+
+  v_cuts = []
+  p_sum = Array.new(h+1) { |i| 0 }
+  for x in 0..c-1
+    i = 0
+    for y in 0..r-1
+      if y <= h_cuts[i]
+        p_sum[i] += 1
+      else
+        i += 1
+        p_sum[i] += 1
+      end
+    end
+
+    return false if p_sum.any? do |e|
+      e > p_must
+    end
+
+    if p_sum.all?{|e| e == p_must}
+      v_cuts << x
+      p_sum = Array.new(h+1) { |j| 0 }
+    end
+  end
+
+  return false if p_sum.any? do |e|
+    e != p_must
+  end
+
+  return true
+end
+
 # main
 t_start = Time.now
 
 cases = readline().to_i
 
 (1 .. cases).each do |case_index|
-  c, r, h, v = ris
-
-  grid = rws(c)
-
-  ok = false
-  # cut x -> [0..x]
-  for y in 0..c-2
-    for x in 0..r-2
-      c1 = 0
-      for j in 0..y
-        for i in 0..x
-          c1 += 1 if grid[j][i] == "@"
-        end
-      end
-
-      c2 = 0
-      for j in 0..y
-        for i in x+1..r-1
-          c2 += 1 if grid[j][i] == "@"
-        end
-      end
-
-      c3 = 0
-      for j in y+1..c-1
-        for i in 0..x
-          c3 += 1 if grid[j][i] == "@"
-        end
-      end
-
-      c4 = 0
-      for j in y+1..c-1
-        for i in x+1..r-1
-          c4 += 1 if grid[j][i] == "@"
-        end
-      end
-
-      if c1 == c2 && c2 == c3 && c3 == c4
-        ok = true
-        break
-      end
-    end
-  end
-
-  answer = ok ? "POSSIBLE" : "IMPOSSIBLE"
+  answer = solve() ? "POSSIBLE" : "IMPOSSIBLE"
 
   puts "Case ##{case_index}: #{answer}"
 
