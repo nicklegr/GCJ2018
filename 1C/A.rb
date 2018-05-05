@@ -95,7 +95,7 @@ cases = readline().to_i
   for i in 1..l
     words.each do |w|
       sub = w[0, i]
-      tbl[i-1][sub] = true
+      tbl[i-1][sub] = 1
     end
   end
 
@@ -113,7 +113,23 @@ cases = readline().to_i
     end
 
     if !ok_in
-      ans += words[0][i]
+      chrs = Hash.new(0)
+      words.each do |e|
+        chrs[e[i]] += 1
+      end
+
+      min_chr = nil
+      min_cnt = nil
+
+      chrs.each do |ch, cnt|
+        if !min_cnt || cnt < min_cnt
+          min_chr = ch
+          min_cnt = cnt
+        end
+      end
+
+      raise if !min_chr
+      ans += min_chr
     end
   end
 
