@@ -128,39 +128,42 @@ cases = readline().to_i
 
   grid << Array.new(c){|j| "."}
 
-grid.each do |e|
-  puts e.join("")
-end
-puts "****"
+# grid.each do |e|
+#   puts e.join("")
+# end
+# puts "**** pull up"
 
-  opt_grid = [ Array.new(c){|j| "."} ]
-  first = Array.new(c){|j| true}
+opt_grid = grid.dup
 
-  (grid.size-1).downto(0) do |r|
-    use = false
-    for i in 0...c
-      if grid[r][i] != "." && first[i]
-        use = true
-        first[i] = false
-      end
-    end
+  # opt_grid = [ Array.new(c){|j| "."} ]
+  # first = Array.new(c){|j| true}
 
-    if use
-      opt_grid = [grid[r]] + opt_grid
-    end
-  end
+  # (grid.size-1).downto(0) do |r|
+  #   use = false
+  #   for i in 0...c
+  #     if grid[r][i] != "." && first[i]
+  #       use = true
+  #       first[i] = false
+  #     end
+  #   end
 
-opt_grid.each do |e|
-  puts e.join("")
-end
+  #   if use
+  #     opt_grid = [grid[r]] + opt_grid
+  #   end
+  # end
 
+# opt_grid.each do |e|
+#   puts e.join("")
+# end
+
+  # ------------- pull up
   for y in 1...opt_grid.size-1
     for x in 1...c-1
       if opt_grid[y][x] == "/"
         cx = x
         cy = y
         while cy >= 1 do
-          if opt_grid[cy-1][cx] == "." && opt_grid[cy-1][cx+1] != "/"
+          if opt_grid[cy-1][cx] == "." && opt_grid[cy-1][cx+1] != "/" && opt_grid[cy][cx-1] != "/"
             opt_grid[cy][cx] = "."
             cy -= 1
             opt_grid[cy][cx] = "/"
@@ -168,12 +171,16 @@ end
             break
           end
         end
+# opt_grid.each do |e|
+#   puts e.join("")
+# end
+# puts "*"
       elsif opt_grid[y][x] == "\\"
         cx = x
         cy = y
         while cy >= 1 do
 # pp cx, cy
-          if opt_grid[cy-1][cx] == "." && opt_grid[cy-1][cx-1] != "\\"
+          if opt_grid[cy-1][cx] == "." && opt_grid[cy-1][cx-1] != "\\" && opt_grid[cy][cx+1] != "\\"
             opt_grid[cy][cx] = "."
             cy -= 1
             opt_grid[cy][cx] = "\\"
@@ -181,11 +188,49 @@ end
             break
           end
         end
+# opt_grid.each do |e|
+#   puts e.join("")
+# end
+# puts "*"
       end
     end
   end
 
 # puts "-----"
+
+# opt_grid.each do |e|
+#   puts e.join("")
+# end
+# puts "**** remove useless"
+
+  # ------------- remove useless
+  loop do
+    changed = false
+    (opt_grid.size-1-1).downto(1) do |y|
+      for x in 1...c-1
+        if opt_grid[y][x] == "/"
+          if opt_grid[y-1][x] == "/" && opt_grid[y-1][x+1] != "/"
+            opt_grid[y][x] = "."
+            changed = true
+# opt_grid.each do |e|
+#   puts e.join("")
+# end
+# puts "===="
+          end
+        elsif opt_grid[y][x] == "\\"
+          if opt_grid[y-1][x] == "\\" && opt_grid[y-1][x-1] != "\\"
+            opt_grid[y][x] = "."
+            changed = true
+# opt_grid.each do |e|
+#   puts e.join("")
+# end
+# puts "===="
+          end
+        end
+      end
+    end
+    break if !changed
+  end
 
   opt_grid.reject! do |e|
     e.all? do |e1|
