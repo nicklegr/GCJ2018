@@ -212,25 +212,43 @@ opt_grid = grid.dup
           if opt_grid[y-1][x] == "/" && opt_grid[y-1][x+1] != "/"
             opt_grid[y][x] = "."
             changed = true
-# opt_grid.each do |e|
-#   puts e.join("")
-# end
-# puts "===="
           end
         elsif opt_grid[y][x] == "\\"
           if opt_grid[y-1][x] == "\\" && opt_grid[y-1][x-1] != "\\"
             opt_grid[y][x] = "."
             changed = true
-# opt_grid.each do |e|
-#   puts e.join("")
-# end
-# puts "===="
           end
         end
       end
     end
     break if !changed
   end
+
+# opt_grid.each do |e|
+#   puts e.join("")
+# end
+# puts "**** remove useless 2"
+
+  # ------------- remove useless 2
+  # loop do
+  #   changed = false
+  #   for y in 0...opt_grid.size-1
+  #     for x in 1...c-1
+  #       if opt_grid[y][x] == "/"
+  #         if opt_grid[y+1][x] == "/"
+  #           opt_grid[y][x] = "."
+  #           changed = true
+  #         end
+  #       elsif opt_grid[y][x] == "\\"
+  #         if opt_grid[y+1][x] == "\\"
+  #           opt_grid[y][x] = "."
+  #           changed = true
+  #         end
+  #       end
+  #     end
+  #   end
+  #   break if !changed
+  # end
 
   opt_grid.reject! do |e|
     e.all? do |e1|
@@ -242,6 +260,9 @@ opt_grid = grid.dup
 
   opt_grid.each do |e|
     raise if e.first != "." || e.last != "."
+    str = e.join("")
+    puts str
+    raise if str.match(/\\\//)
   end
 
   puts "Case ##{case_index}: #{opt_grid.size}"
